@@ -319,12 +319,14 @@ footer{
 /* CONTENEDOR PRINCIPAL DE BITÁCORAS (Reemplaza al antiguo .lista-reportes) */
 .bitacoras-layout {
   display: grid;
-  grid-template-columns: 1fr 320px; /* El 1fr empuja el texto para que ocupe todo el espacio a la izquierda */
-  gap: 4vw;
-  padding: 2vh 6vw 14vh; /* Esto asegura que tenga la misma separación izquierda que el título */
-  max-width: 1200px; 
+  /* Aumentamos el tamaño de la columna derecha a 450px para hacer las fotos más grandes */
+  grid-template-columns: 1fr 450px; 
+  /* Aumentamos el espacio entre los textos y las fotos */
+  gap: 8vw; 
+  padding: 2vh 6vw 14vh;
+  /* Ampliamos el límite máximo para que abarque casi toda la pantalla hacia la derecha */
+  max-width: 1500px; 
   align-items: start;
-  /* (Aquí borramos el margin: 0 auto; que era lo que lo empujaba al medio) */
 }
 
 .lista-reportes {
