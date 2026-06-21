@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>archivoD</title>
+<style>
+@import url('https://fonts.cdnfonts.com/css/jmh-typewriter');
+
+:root{
+  --negro: #0a0a0a;
+  --panel: #161210;
+  --hueso: #e8e3d8;
+  --hueso-tenue: #9a948a;
+  --rojo: #9a1f1f;
+  --rojo-vivo: #c41e1e;
+  --gris: #3a3a3a;
+  --linea: #2a2422;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--negro);
+  color:var(--hueso);
+  font-family:'Courier New', Courier, monospace;
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* textura de grano sutil */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:0.05;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.4) 0px, transparent 1px, transparent 2px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.2) 0px, transparent 1px, transparent 3px);
+  mix-blend-mode:overlay;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+}
+
+.screen{
+  display:none;
+  position:relative;
+  z-index:3;
+  min-height:100vh;
+}
+.screen.active{display:block;}
+
+/* ===== HEADER ===== */
+header{
+  border-bottom:1px solid var(--linea);
+  padding:28px 6vw 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.logo{
+  font-family:'Special Elite','Courier New',monospace;
+  font-size:1.5rem;
+  letter-spacing:2px;
+  color:var(--hueso);
+  text-decoration:none;
+  display:flex;
+  align-items:baseline;
+  gap:2px;
+}
+.logo .d-red{color:var(--rojo-vivo);}
+
+nav{
+  display:flex;
+  gap:28px;
+  font-size:0.72rem;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+nav a{
+  color:var(--hueso-tenue);
+  text-decoration:none;
+  position:relative;
+  padding-bottom:4px;
+  transition:color .25s ease;
+}
+nav a:hover, nav a:focus-visible{color:var(--hueso);}
+nav a.current{color:var(--rojo-vivo);}
+nav a.current::after{
+  content:"";
+  position:absolute;
+  left:0;bottom:0;
+  width:100%;height:1px;
+  background:var(--rojo-vivo);
+}
+
+/* ===== HERO / INICIO ===== */
+.hero{
+  padding:9vh 6vw 6vh;
+  max-width:880px;
+}
+.eyebrow{
+  font-size:0.7rem;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--rojo-vivo);
+  margin-bottom:18px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.eyebrow::before{
+  content:"";
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--rojo-vivo);
+  box-shadow:0 0 8px var(--rojo-vivo);
+  animation:pulso 2.4s infinite ease-in-out;
+}
+@keyframes pulso{
+  0%,100%{opacity:1;}
+  50%{opacity:0.25;}
+}
+
+h1.titulo{
+  font-family:'Special Elite','Courier New',monospace;
+  font-weight:400;
+  font-size:clamp(2.4rem, 6vw, 4.2rem);
+  line-height:1.05;
+  letter-spacing:1px;
+  margin-bottom:24px;
+}
+h1.titulo .raya{
+  color:var(--rojo-vivo);
+}
+
+.descripcion{
+  font-family:Georgia, 'Times New Roman', serif;
+  font-size:1.08rem;
+  line-height:1.75;
+  color:var(--hueso-tenue);
+  max-width:640px;
+}
+.descripcion strong{color:var(--hueso);font-weight:600;}
+
+.firma{
+  margin-top:30px;
+  font-size:0.78rem;
+  letter-spacing:1px;
+  color:var(--gris);
+  border-left:2px solid var(--rojo);
+  padding-left:14px;
+}
+
+/* ===== ESTADO VACÍO / PRIMER POST ===== */
+.divisor{
+  margin:7vh 6vw 4vh;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  color:var(--gris);
+  font-size:0.7rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  max-width:880px;
+}
+.divisor .linea{flex:1;height:1px;background:var(--linea);}
+
+.feed{
+  padding:0 6vw 12vh;
+  max-width:880px;
+}
+
+.post{
+  background:var(--panel);
+  border:1px solid var(--linea);
+  border-left:3px solid var(--rojo-vivo);
+  padding:38px clamp(20px,4vw,46px);
+  position:relative;
+}
+
+.post-meta{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  font-size:0.7rem;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--gris);
+  margin-bottom:20px;
+}
+.post-meta .estado{
+  color:var(--rojo-vivo);
+}
+
+h2.post-titulo{
+  font-family:'Special Elite','Courier New',monospace;
+  font-size:clamp(1.5rem,3.4vw,2.1rem);
+  font-weight:400;
+  line-height:1.25;
+  margin-bottom:22px;
+  color:var(--hueso);
+}
+
+.post-cuerpo{
+  font-family:Georgia, 'Times New Roman', serif;
+  font-size:1.05rem;
+  line-height:1.85;
+  color:#cfc9bc;
+}
+.post-cuerpo p{margin-bottom:1.2em;}
+.post-cuerpo p:last-child{margin-bottom:0;}
+
+.post-cuerpo .marcado{
+  background:rgba(154,31,31,0.18);
+  padding:0 3px;
+}
+
+.cta-bitacoras{
+  margin-top:32px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-family:'Courier New',monospace;
+  font-size:0.78rem;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--rojo-vivo);
+  text-decoration:none;
+  border:1px solid var(--rojo);
+  padding:12px 20px;
+  background:transparent;
+  cursor:pointer;
+  transition:background .25s ease, color .25s ease;
+}
+.cta-bitacoras:hover, .cta-bitacoras:focus-visible{
+  background:var(--rojo-vivo);
+  color:var(--negro);
+}
+.cta-bitacoras .flecha{transition:transform .25s ease;}
+.cta-bitacoras:hover .flecha{transform:translateX(4px);}
+
+footer{
+  padding:24px 6vw 40px;
+  font-size:0.68rem;
+  letter-spacing:1px;
+  color:var(--gris);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  max-width:880px;
+}
+
+/* ===== PANTALLA BITÁCORAS ===== */
+.archivo-header{
+  padding:6vh 6vw 3vh;
+  max-width:980px;
+}
+.btn-volver{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--hueso-tenue);
+  text-decoration:none;
+  font-size:0.72rem;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:30px;
+  cursor:pointer;
+  background:none;
+  border:none;
+  font-family:'Courier New',monospace;
+  transition:color .2s ease;
+}
+.btn-volver:hover, .btn-volver:focus-visible{color:var(--rojo-vivo);}
+
+.archivo-titulo{
+  font-family:'Special Elite','Courier New',monospace;
+  font-size:clamp(2rem,5vw,3rem);
+  margin-bottom:14px;
+}
+.archivo-sub{
+  font-family:Georgia,serif;
+  color:var(--hueso-tenue);
+  max-width:600px;
+  line-height:1.7;
+  margin-bottom:8px;
+}
+.archivo-meta-bar{
+  display:flex;
+  gap:30px;
+  margin-top:24px;
+  padding-top:18px;
+  border-top:1px solid var(--linea);
+  font-size:0.7rem;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--gris);
+}
+.archivo-meta-bar span b{color:var(--rojo-vivo);font-size:0.95rem;letter-spacing:0;}
+
+.lista-reportes{
+  padding:2vh 6vw 14vh;
+  max-width:980px;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+.reporte{
+  background:var(--panel);
+  border:1px solid var(--linea);
+  position:relative;
+  overflow:hidden;
+}
+
+.reporte-cabecera{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:20px clamp(20px,3.5vw,36px);
+  border-bottom:1px solid var(--linea);
+}
+
+.num-reporte{
+  font-family:'Special Elite','Courier New',monospace;
+  font-size:2.2rem;
+  color:var(--rojo-vivo);
+  line-height:1;
+  min-width:54px;
+}
+
+.cabecera-info{flex:1;}
+.cabecera-info .tag{
+  font-size:0.66rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gris);
+  margin-bottom:5px;
+}
+.cabecera-info .tag .punto{color:var(--rojo-vivo);}
+.cabecera-info h3{
+  font-family:'Special Elite','Courier New',monospace;
+  font-weight:400;
+  font-size:1.15rem;
+  color:var(--hueso);
+}
+
+.nivel{
+  font-size:0.62rem;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:5px 10px;
+  border:1px solid var(--rojo);
+  color:var(--rojo-vivo);
+  white-space:nowrap;
+}
+
+.reporte-cuerpo{
+  padding:30px clamp(20px,3.5vw,36px) 34px;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:1.02rem;
+  line-height:1.85;
+  color:#cfc9bc;
+}
+.reporte-cuerpo p{margin-bottom:1.15em;}
+.reporte-cuerpo p:last-child{margin-bottom:0;}
+.reporte-cuerpo .marcado{
+  background:rgba(154,31,31,0.18);
+  padding:0 3px;
+}
+.reporte-cuerpo .susurro{
+  color:var(--hueso-tenue);
+  font-style:italic;
+}
+
+.cierre-archivo{
+  text-align:center;
+  padding:6vh 6vw 10vh;
+  color:var(--gris);
+  font-size:0.75rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+.cierre-archivo .cursor{
+  display:inline-block;
+  width:8px;height:14px;
+  background:var(--rojo-vivo);
+  margin-left:6px;
+  animation:parpadeo 1.1s infinite step-end;
+  vertical-align:middle;
+}
+@keyframes parpadeo{
+  0%,49%{opacity:1;}
+  50%,100%{opacity:0;}
+}
+
+/* foco accesible */
+a:focus-visible, button:focus-visible{
+  outline:1px dashed var(--rojo-vivo);
+  outline-offset:3px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+}
+
+@media (max-width:640px){
+  header{padding:22px 5vw 18px;}
+  nav{gap:18px;font-size:0.65rem;}
+  .hero{padding:7vh 5vw 4vh;}
+  .post{padding:28px 20px;}
+  .reporte-cabecera{padding:18px 18px;gap:14px;}
+  .num-reporte{font-size:1.7rem;min-width:38px;}
+  .reporte-cuerpo{padding:22px 18px 28px;}
+  .archivo-meta-bar{gap:18px;flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ PANTALLA 1: INICIO / BLOG ============ -->
+<section class="screen active" id="pantalla-inicio">
+  <header>
+    <a href="#" class="logo" onclick="irA('inicio');return false;">archivo<span class="d-red">D</span></a>
+    <nav>
+      <a href="#" class="current" onclick="irA('inicio');return false;">Inicio</a>
+      <a href="#" onclick="irA('bitacoras');return false;">Bitácoras</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">en línea — último acceso hoy</div>
+    <h1 class="titulo">Soy Diego.<br>Esto es archivo<span class="raya">D</span>.</h1>
+    <p class="descripcion">
+      Abrí este espacio hace un par de meses con una idea simple: <strong>compartir pequeñas investigaciones</strong>, cosas que me llaman la atención y que decido seguirles el hilo hasta donde se pueda. Historia, ciencia rara, casos sin resolver, lo que sea que me agarre una tarde libre.
+    </p>
+    <p class="descripcion" style="margin-top:14px;">
+      Nunca llegué a publicar nada. Lo tenía todo listo — el nombre, el diseño, las ganas — pero algo siempre me detenía. Hasta esta semana.
+    </p>
+    <div class="firma">D. — administrador de archivoD</div>
+  </div>
+
+  <div class="divisor">
+    <span>primera entrada</span>
+    <span class="linea"></span>
+    <span>hoy</span>
+  </div>
+
+  <div class="feed">
+    <article class="post">
+      <div class="post-meta">
+        <span class="estado">● sin editar</span>
+        <span>registro personal — no investigación</span>
+      </div>
+      <h2 class="post-titulo">No sé ni por qué estoy escribiendo esto aquí, pero necesito ponerlo en algún lado</h2>
+      <div class="post-cuerpo">
+        <p>
+          Este blog iba a ser otra cosa. Lo armé para subir investigaciones, cosas pequeñas, curiosidades, nada personal. Pero llevo días sin poder pensar en otra cosa que no sea mi hermano, así que va a tener que servir para esto también. Si alguien llega a leer esto algún día: no es el contenido que prometí, pero es lo único que tengo cabeza para escribir ahora.
+        </p>
+        <p>
+          Nicolás ha estado actuando <span class="marcado">muy raro</span> últimamente. No es algo que pueda explicar bien todavía, por eso decidí empezar a anotar todo, día por día, tal como pasa, sin filtrar nada. Si lo escribo se vuelve real, y si se vuelve real al menos puedo mirarlo después con la cabeza más fría.
+        </p>
+        <p>
+          Voy a ir subiendo cada cosa que note como una bitácora aparte, en orden, para que quede un registro de cuándo empezó todo y cómo fue cambiando. Por ahora son tres reportes. Espero de verdad que no tenga que escribir un cuarto.
+        </p>
+      </div>
+      <a href="#" class="cta-bitacoras" onclick="irA('bitacoras');return false;">
+        Ver las bitácoras <span class="flecha">→</span>
+      </a>
+    </article>
+  </div>
+
+  <footer>
+    <span>archivoD © registro personal de Diego</span>
+    <span>3 bitácoras documentadas</span>
+  </footer>
+</section>
+
+<!-- ============ PANTALLA 2: BITÁCORAS ============ -->
+<section class="screen" id="pantalla-bitacoras">
+  <header>
+    <a href="#" class="logo" onclick="irA('inicio');return false;">archivo<span class="d-red">D</span></a>
+    <nav>
+      <a href="#" onclick="irA('inicio');return false;">Inicio</a>
+      <a href="#" class="current" onclick="irA('bitacoras');return false;">Bitácoras</a>
+    </nav>
+  </header>
+
+  <div class="archivo-header">
+    <button class="btn-volver" onclick="irA('inicio')">← volver al inicio</button>
+    <h1 class="archivo-titulo">Bitácoras de Diego</h1>
+    <p class="archivo-sub">
+      Registro cronológico de lo que ha pasado con Nicolás desde que desapareció por un día. Cada entrada está tal como la escribí, sin corregir después.
+    </p>
+    <div class="archivo-meta-bar">
+      <span>entradas <b>03</b></span>
+      <span>sujeto observado <b>Nicolás</b></span>
+      <span>estado <b style="color:var(--rojo-vivo);">en curso</b></span>
+    </div>
+  </div>
+
+  <div class="lista-reportes">
+
+    <article class="reporte">
+      <div class="reporte-cabecera">
+        <div class="num-reporte">01</div>
+        <div class="cabecera-info">
+          <div class="tag"><span class="punto">●</span> día de la desaparición</div>
+          <h3>REPORTE 1</h3>
+        </div>
+        <div class="nivel">1</div>
+      </div>
+      <div class="reporte-cuerpo">
+        <p>
+          Pasé el peor día de mi vida llamando a amigos de Nicolás. Cuando estaba a punto de ir a la policía, llamé a mi papá y me dijo que me calmara, que seguro Nicolás regresaría. Le hice caso, entré a la casa y... ahí estaba. Parado en la cocina, tomando un vaso de agua como si nada.
+        </p>
+        <p>
+          Le grité, le reclamé, estaba furioso. Lo raro es que no me gritó de vuelta. Nicolás siempre responde con soberbia, pero esta vez bajó la cabeza, me pidió disculpas y se fue a dormir. Me dejó una sensación fría en el estómago. Al menos está a salvo. Creo.
+        </p>
+      </div>
+    </article>
+
+    <article class="reporte">
+      <div class="reporte-cabecera">
+        <div class="num-reporte">02</div>
+        <div class="cabecera-info">
+          <div class="tag"><span class="punto">●</span> días después</div>
+          <h3>REPORTE 2</h3>
+        </div>
+        <div class="nivel">2</div>
+      </div>
+      <div class="reporte-cuerpo">
+        <p>
+          Esto ya no es normal. Ayer me desperté y el desayuno estaba listo en la mesa. Nicolás nunca cocina, con suerte se preparaba un cereal. Hoy me levanté y su habitación estaba impecable. Los que conocen a mi hermano saben que su cuarto suele ser un caos de ropa sucia tirada.
+        </p>
+        <p>
+          Le pregunté en tono de broma si me quería matar o algo. Solo me sonrió. Una sonrisa rara. No se enoja, no usa el celular, no sale. Es como si estuviera siguiendo un manual de <span class="susurro">"cómo ser el hermano ideal".</span>
+        </p>
+      </div>
+    </article>
+
+    <article class="reporte">
+      <div class="reporte-cabecera">
+        <div class="num-reporte">03</div>
+        <div class="cabecera-info">
+          <div class="tag"><span class="punto">●</span> esta semana — el más reciente</div>
+          <h3>REPORTE 3</h3>
+        </div>
+        <div class="nivel" style="border-color:var(--rojo-vivo);color:var(--rojo-vivo);background:rgba(154,31,31,0.12);">3</div>
+      </div>
+      <div class="reporte-cuerpo">
+        <p>
+          Ayer a las en medio de la noche escuché ruidos en la cocina. Me asomé por la ventana interna que da a la sala. Nicolás estaba parado a oscuras, mirando fijamente el vidrio de la ventana principal de la casa, estático. Encendí la linterna de mi celular para ver qué hacía y se giró hacia mí sin decir ni una palabra antes de encerrarse en su cuarto.
+        </p>
+        <p>
+          He estado investigando en foros de internet (encontré un hilo en 4chan de milagro). Hay gente que habla de tatuajes y que son muy comunes en sectas, ya que recordé el tatuaje de la chica con la que tuvo contacto Nicolás y ahora el sospechoso que vi en la tele, estoy empezando a ponerme más nervioso.
+        </p>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="cierre-archivo">fin del registro disponible<span class="cursor"></span></div>
+</section>
+
+<script>
+function irA(pantalla){
+  document.getElementById('pantalla-inicio').classList.remove('active');
+  document.getElementById('pantalla-bitacoras').classList.remove('active');
+  document.getElementById('pantalla-' + pantalla).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
