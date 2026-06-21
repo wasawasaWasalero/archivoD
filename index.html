@@ -316,12 +316,92 @@ footer{
 }
 .archivo-meta-bar span b{color:var(--rojo-vivo);font-size:0.95rem;letter-spacing:0;}
 
-.lista-reportes{
-  padding:2vh 6vw 14vh;
-  max-width:980px;
-  display:flex;
-  flex-direction:column;
-  gap:28px;
+/* CONTENEDOR PRINCIPAL DE BITÁCORAS (Reemplaza al antiguo .lista-reportes) */
+.bitacoras-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px; /* 1 columna para texto, 320px para imágenes */
+  gap: 4vw;
+  padding: 2vh 6vw 14vh;
+  max-width: 1100px; /* Un poco más ancho para que quepan las fotos */
+  margin: 0 auto;
+  align-items: start; /* Vital para que la barra lateral no se estire */
+}
+
+.lista-reportes {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ESTILOS DE LA COLUMNA DE IMÁGENES */
+.evidencia-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: sticky; /* Hace que las imágenes te sigan al hacer scroll */
+  top: 6vh; 
+}
+
+.evidencia-header {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: var(--hueso-tenue);
+  border-bottom: 1px solid var(--linea);
+  padding-bottom: 10px;
+}
+
+.evidencia-header .punto-rojo {
+  color: var(--rojo-vivo);
+  animation: pulso 2.4s infinite ease-in-out;
+}
+
+.imagen-contenedor {
+  background: var(--panel);
+  border: 1px solid var(--linea);
+  padding: 12px;
+  position: relative;
+}
+
+.imagen-contenedor img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* Un filtro opcional para darle un toque más lúgubre/misterioso */
+  filter: grayscale(50%) sepia(10%); 
+  transition: filter 0.3s ease, border-color 0.3s ease;
+}
+
+.imagen-contenedor:hover { border-color: var(--rojo); }
+.imagen-contenedor:hover img { filter: grayscale(0%) sepia(0%); }
+
+.pie-foto {
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  color: var(--gris);
+  text-align: right;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* RESPONSIVE: Si la pantalla es pequeña, mandamos las fotos abajo */
+@media (max-width: 960px) {
+  .bitacoras-layout {
+    grid-template-columns: 1fr;
+  }
+  .evidencia-lateral {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .evidencia-header { width: 100%; }
+  .imagen-contenedor { width: calc(50% - 12.5px); }
+}
+
+@media (max-width: 640px) {
+  .imagen-contenedor { width: 100%; }
 }
 
 .reporte{
@@ -517,7 +597,30 @@ a:focus-visible, button:focus-visible{
     </div>
   </div>
 
-  <div class="lista-reportes">
+  <div class="bitacoras-layout">
+    
+    <div class="lista-reportes">
+      
+      </div>
+
+    <aside class="evidencia-lateral">
+      <div class="evidencia-header">
+        <span class="punto-rojo">●</span> MATERIAL ADJUNTO
+      </div>
+      
+      <div class="imagen-contenedor">
+        <img src="image_402525.png" alt="Tatuaje en la pierna">
+        <div class="pie-foto">Ref. 01 - Tatuaje de la chica</div>
+      </div>
+
+      <div class="imagen-contenedor">
+        <img src="image_402521.jpg" alt="Siluetas oscuras">
+        <div class="pie-foto">Ref. 02 - Hilo de 4chan</div>
+      </div>
+    </aside>
+
+  </div>
+  <div class="cierre-archivo">fin del registro disponible<span class="cursor"></span></div>
 
     <article class="reporte">
       <div class="reporte-cabecera">
